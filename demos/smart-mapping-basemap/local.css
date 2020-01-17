@@ -1,0 +1,10 @@
+#containerDiv {
+  background-color: white;
+  padding: 3px;
+  text-align: center;
+  min-width: 260px;
+}
+
+#title {
+  font-size: 14pt;
+}
