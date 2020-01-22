@@ -48,20 +48,20 @@
               </calcite-tab-nav>
             
               <calcite-tab is-active>
-                <pre data-line="6, 13"><code class="language-js">
-const treeConfigLayer = {
+                <pre data-line="6, 15"><code class="language-js">
+const accidentConfigLayer = {
   layer: layer,
   // Set it so that only two fields
   // display within the form
   fieldConfig: [
-    {...}, {...},
     {
-      label: "Tree Details",
-      description: "Provide specific details on tree species",
-      // only show tree details fields if
-      // tree Genus has been selected
-      visibilityExpression: "!IsEmpty($feature.Gattung)",
-      fieldConfig: [...]
+      name: "CRASH_EVENT_TYPES",
+      label: "CRASH TYPE"
+    },
+    {
+      label: "Details",
+      description: "Provide specifics related to incident",
+      fieldConfig: [ ... ]
     }
   ]
 };
@@ -73,7 +73,7 @@ const treeConfigLayer = {
 const editor = new Editor({
   view: view,
   // Pass in the configurations created above
-  layerInfos: [treeConfigLayer],
+  layerInfos: [accidentConfigLayer],
 });
                 </code></pre>
               </calcite-tab>
