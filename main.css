@@ -22,12 +22,12 @@ body,
 }
 
 .top-nav {
-  /* background-color: #e8912e; */
-  background: -moz-linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #e36e21 90%, #f2981c 100%);
+  background-color: #338AFF;
+  /* background: -moz-linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #e36e21 90%, #f2981c 100%); */
   /* FF3.6-15 */
-  background: -webkit-linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #b37044 90%, #f2981c 100%);
+  /* background: -webkit-linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #b37044 90%, #f2981c 100%); */
   /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #e36e21 90%, #f2981c 100%);
+  /* background: linear-gradient(45deg, #d13d26 0%, #db5b22 20%, #e36e21 90%, #f2981c 100%); */
 }
 
 .top-nav-title {
