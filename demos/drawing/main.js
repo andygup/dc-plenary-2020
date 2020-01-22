@@ -8,11 +8,7 @@ require([
   const layer = new GraphicsLayer();
 
   const map = new Map({
-    basemap: {
-      portalItem: {
-        id: "e64f06e8d912465a96f9ea9bfdb72676"
-      }
-    },
+    basemap: "streets-navigation-vector",
     layers: [layer]
   });
 
@@ -30,8 +26,8 @@ require([
   const view = new MapView({
     container: "viewDiv",
     map: map,
-    zoom: 12,
-    center: [12.4964, 41.9028]
+    center: [-77.035, 38.895],
+    zoom: 15
   });
 
   const sketch = new Sketch({
