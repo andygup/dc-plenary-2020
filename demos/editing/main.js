@@ -2,21 +2,22 @@ require([
   "esri/WebMap",
   "esri/views/MapView",
   "esri/widgets/Editor",
+  "esri/layers/FeatureLayer",
   "esri/widgets/Legend"
-], function(WebMap, MapView, Editor, Legend) {
+], function(WebMap, MapView, Editor, FeatureLayer, Legend) {
   let treeConfigLayer;
 
-  // Create a map frm the referenced webmap item id
-  let webmap = new WebMap({
+  // https://opendata.dc.gov/pages/connect-web-services
+
+  let map = new WebMap({
     portalItem: {
-      id: "372222092d0a46d9b809acee49c786b9"
+      id: "03755a1ed80942248552fa56c53c3212"
     }
-  });
+  });   
 
   let view = new MapView({
     container: "viewDiv",
-    map: webmap,
-    center: [13.4040, 52.5200],
+    map: map,
     zoom: 15
   });
 
@@ -25,40 +26,35 @@ require([
 
     // Loop through webmap layers and set an EditConfig for each
     view.map.layers.forEach(function(layer) {
-      if (layer.title === "Baum_Berlin") {
+      if (layer.title === "DC Accidents") {
         treeConfigLayer = {
           layer: layer,
           // Set it so that only two field displays within the form
           fieldConfig: [
             {
-              name: "Gattung",
-              label: "Genus"
+              name: "CRASH_EVENT_TYPES",
+              label: "CRASH TYPE"
             },
             {
-              label: "Tree Details",
-              description: "Provide specific details on tree species",
-              visibilityExpression: "!IsEmpty($feature.Gattung)",
+              label: "Details",
+              description: "Provide specifics related to incident",
               fieldConfig: [
                 {
-                  name: "NameNr",
-                  label: "Name"
+                  name: "CRASHID",
+                  label: "Crash ID"
                 },
                 {
-                  name: "Pflanzjahr",
-                  label: "Planting Year"
+                  name: "ADDRESS1",
+                  label: "Address"
                 },
                 {
-                  name: "KroneDurch",
-                  label: "Crown diameter (m)"
+                  name: "TRAFFICWAYRELATION",
+                  label: "Traffic Relationship"
                 },
                 {
-                  name: "BaumHoehe",
-                  label: "Height (m)"
-                },
-                {
-                  name: "Kategorie",
-                  label: "Category"
-                }
+                  name: "STREETLIGHTING",
+                  label: "Street light status"
+                }                
               ]
             }
           ]
