@@ -5,7 +5,7 @@ require([
   "esri/layers/FeatureLayer",
   "esri/widgets/Legend"
 ], function(WebMap, MapView, Editor, FeatureLayer, Legend) {
-  let treeConfigLayer;
+  let accidentConfigLayer;
 
   // https://opendata.dc.gov/pages/connect-web-services
 
@@ -27,9 +27,9 @@ require([
     // Loop through webmap layers and set an EditConfig for each
     view.map.layers.forEach(function(layer) {
       if (layer.title === "DC Accidents") {
-        treeConfigLayer = {
+        accidentConfigLayer = {
           layer: layer,
-          // Set it so that only two field displays within the form
+          // Create two sections within the form
           fieldConfig: [
             {
               name: "CRASH_EVENT_TYPES",
@@ -66,7 +66,7 @@ require([
     let editor = new Editor({
       view: view,
       // Pass in the configurations created above
-      layerInfos: [treeConfigLayer],
+      layerInfos: [accidentConfigLayer],
     });
 
     let legend = new Legend({ view });
