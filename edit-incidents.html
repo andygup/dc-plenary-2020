@@ -5,10 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Edit features with the Editor widget - 4.14</title>
-
   <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css" />
   <script src="https://js.arcgis.com/4.14/"></script>
-
   <style>
     html,
     body,
@@ -18,7 +16,6 @@
       height: 100%;
       width: 100%;
     }
-
     #header {
       font-size: 40px;
       font-weight: bold;
@@ -29,11 +26,9 @@
       width: 100%;
       background-color: lightgray;
     }
-
     .esri-editor .esri-item-list__scroller {
       max-height: 350px;
-    }
-  
+    } 
   </style>
 
   <script>
@@ -58,17 +53,14 @@
         let editor = new Editor({
           view: view
         });        
-
         view.ui.add(editor, "top-right");
        });
     });
   </script>
 </head>
-
 <body>
   <div id="header">Incident Management</div>
   <div id="viewDiv"></div>
   <div id="editorDiv"></div>
 </body>
-
 </html>
