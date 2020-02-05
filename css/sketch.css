@@ -1,0 +1,97 @@
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #div-median-age {
+      height: 180px;
+      width: 300px;
+      color: #fff;
+      background-color: rgba(F, F, F, 0.75);
+      border-radius: 15px;
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);  
+      box-shadow:   4px 6px rgba(35,35,35,0.25);    
+    }    
+
+    #div-medianage {
+      height: 180px;
+      width: 300px;
+      color: #fff;
+      background-color: rgba(F, F, F, 0.75);
+      border-radius: 15px;
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);      
+      box-shadow:   4px 6px rgba(35,35,35,0.25);
+    }       
+
+    #span-slider-text {
+      position: absolute;
+      font-size: 18px;
+      color: #5b5d5e;
+      padding: 8px;
+    }
+
+    .titleText {
+      background-color: rgba(255, 255, 255, .1);
+      padding-left: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 20pt;
+      font-weight: 60;
+      color: #5b5d5e;
+    }    
+
+    .totalText {
+      text-align: center;
+      margin-top: 60px;
+      color: #747677;
+      font-size: 80pt;
+      font-weight: bolder;
+    } 
+
+    #div-slider {
+      width: 332;
+      height: 80px;
+      border-radius: 15px;
+      box-shadow:   4px 6px rgba(35,35,35,0.25);
+    }
+
+    #div-slider .esri-slider__track {
+      background-color: #5d7f4a;
+      height: 10px;
+    }
+
+    #div-slider .esri-slider__thumb {
+      background-color: #515151;
+      border: 2px solid white;
+      border-radius: 24px;
+      height: 24px;
+      left: -12px;
+      top: -6px;
+      width: 24px;
+    }
+
+    #div-slider .esri-slider__anchor:focus .esri-slider__thumb {
+      background-color: #777;
+    }
+
+    #div-slider .esri-slider__segment-0 {
+      background-color: #5d7f4a;
+    }
+
+    #div-slider .esri-slider__segment-1 {
+      background-color: #ddd;
+    }  
+
+    .esri-sketch__panel {
+      border-radius: 15px;
+      box-shadow:   2px 4px rgba(35,35,35,0.25);    
+    }
+
+    .esri-sketch {
+      border-radius: 15px;
+    }
