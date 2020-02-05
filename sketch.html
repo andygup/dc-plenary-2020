@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Sketch + Demographics</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css" />
   <style>
     html,
     body,
@@ -21,10 +22,11 @@
       background-color: rgba(F, F, F, 0.75);
       border-radius: 15px;
       -webkit-backdrop-filter: blur(5px);
-      backdrop-filter: blur(5px);      
+      backdrop-filter: blur(5px);  
+      box-shadow:   4px 6px rgba(35,35,35,0.25);    
     }    
 
-    #div-diversity-index {
+    #div-medianage {
       height: 180px;
       width: 300px;
       color: #fff;
@@ -32,38 +34,83 @@
       border-radius: 15px;
       -webkit-backdrop-filter: blur(5px);
       backdrop-filter: blur(5px);      
+      box-shadow:   4px 6px rgba(35,35,35,0.25);
     }       
 
-  .titleText {
-    background-color: rgba(255, 255, 255, .1);
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 20pt;
-    font-weight: 60;
-    color: #5b5d5e;
-  }    
+    #span-slider-text {
+      position: absolute;
+      font-size: 18px;
+      color: #5b5d5e;
+      padding: 8px;
+    }
 
-  .totalText {
-    text-align: center;
-    margin-top: 60px;
-    color: #747677;
-    font-size: 80pt;
-    font-weight: bolder;
-  } 
+    .titleText {
+      background-color: rgba(255, 255, 255, .1);
+      padding-left: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 20pt;
+      font-weight: 60;
+      color: #5b5d5e;
+    }    
 
-  #div-slider {
-    width: 332;
-    height: 60px;
-  }
+    .totalText {
+      text-align: center;
+      margin-top: 60px;
+      color: #747677;
+      font-size: 80pt;
+      font-weight: bolder;
+    } 
+
+    #div-slider {
+      width: 332;
+      height: 80px;
+      border-radius: 15px;
+      box-shadow:   4px 6px rgba(35,35,35,0.25);
+    }
+
+    #div-slider .esri-slider__track {
+      background-color: #5d7f4a;
+      height: 10px;
+    }
+
+    #div-slider .esri-slider__thumb {
+      background-color: #515151;
+      border: 2px solid white;
+      border-radius: 24px;
+      height: 24px;
+      left: -12px;
+      top: -6px;
+      width: 24px;
+    }
+
+    #div-slider .esri-slider__anchor:focus .esri-slider__thumb {
+      background-color: #777;
+    }
+
+    #div-slider .esri-slider__segment-0 {
+      background-color: 5d7f4a;
+    }
+
+    #div-slider .esri-slider__segment-1 {
+      background-color: #ddd;
+    }  
+
+    .esri-sketch__panel {
+      border-radius: 15px;
+      box-shadow:   2px 4px rgba(35,35,35,0.25);    
+    }
+
+    .esri-sketch {
+      border-radius: 15px;
+    }
   </style>
 
-  <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css" />
   <script src="https://js.arcgis.com/4.14/"></script>
 
   <script>
     require([
-      "esri/Map", 
+      "esri/WebMap",
       "esri/views/MapView",
       "esri/widgets/Sketch",
       "esri/Graphic",
@@ -71,12 +118,12 @@
       "esri/tasks/support/Query",
       "esri/widgets/Slider",
       "esri/layers/FeatureLayer"], 
-    (Map, MapView, Sketch, Graphic, GraphicsLayer, Query, Slider, FeatureLayer) => {
+    (WebMap, MapView, Sketch, Graphic, GraphicsLayer, Query, Slider, FeatureLayer) => {
 
       let featureLayerView;
       let geometry;
       let tempGraphic;
-      const SLIDER_THUMB_DEFAULT = 0.3;
+      const SLIDER_THUMB_DEFAULT = 0.3; // miles
 
       const lineSymbol = {
         type: "simple-line", // autocasts as new SimpleLineSymbol()
@@ -86,36 +133,37 @@
       
       const bufferSymbol = {
         type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-        color: [255, 128, 0, 0.25],
+        color: [255, 255, 255, 0.25],
         outline: {  // autocasts as new SimpleLineSymbol()
           width: 2,
-          color: "gray"
+          color: "white"
         }
       }
 
       const medianAgeDiv = document.getElementById("div-median-age");
-      const diversityIndexDiv = document.getElementById("div-diversity-index");
+      const medianAgeIndexDiv = document.getElementById("div-medianage");
       const sliderDiv = document.getElementById("div-slider");
 
       let graphicsLayer = new GraphicsLayer();          
 
       let featureLayer = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Home_Value_and_Income/FeatureServer/5",
-        outFields: ["MEDAGE_CY", "DIVINDX_CY","UNEMPRT_CY"], // Median Age, Diversity Index, Total Households
-        opacity: 0.5
-      });      
+        outFields: ["MEDAGE_CY", "UNEMPRT_CY"], // Median Age, Unemployment
+      });        
 
-      let map = new Map({
-        basemap: "streets",
-        layers: [featureLayer, graphicsLayer]
-      });      
+      let webmap = new WebMap({
+        portalItem: {
+          id: "3582b744bba84668b52a16b0b6942544"
+        }
+      });
+
+      webmap.addMany([featureLayer, graphicsLayer]);
 
       let view = new MapView({
         container: "viewDiv",
-        map: map,
-        zoom: 14,
-        // center: [-77, 38.93]
-        center: [-73.95, 40.63] // longitude, latitude
+        map: webmap,
+        zoom: 13,
+        center: [-73.95, 40.63] 
       });   
 
       const sketch = new Sketch({
@@ -135,36 +183,46 @@
         labelsVisible: true
       });        
 
-      analysisSlider.on(["thumb-drag"], (e) => {
-        if(e.state === "drag" || e.state === "stop"){
-            queryMedianAge(this.geometry, analysisSlider.values[0]); 
-        }
-      });
-
       view.when(() => {
         view.ui.add(sketch, "top-right");
         view.ui.add(analysisSlider, "top-right");
         view.ui.add(medianAgeDiv, "top-left");
-        view.ui.add(diversityIndexDiv, "top-left");
+        view.ui.add(medianAgeIndexDiv, "top-left");   
+
+        // sketch.viewModel.on(["create"], (event) => {
+        //   console.log("view model", event);
+        //   event.graphic.symbol = lineSymbol;
+        //   if (event.state === "complete") {
+        //     this.geometry = event.graphic.geometry;
+        //     queryMedianAge(event.graphic.geometry, analysisSlider.values[0]);
+        //   }
+        // });
+        
+        sketch.on(["create"], (event) => {
+          console.log(event);
+          if (event.state === "complete") {
+            this.geometry = event.graphic.geometry;
+            queryMedianAge(event.graphic.geometry, analysisSlider.values[0]);
+          }
+        });
+
+        sketch.on(["update"], (event) => {
+          console.log(event);
+          if (event.state === "complete") {
+            this.geometry = event.graphics[0].geometry;
+            event.graphics[0].symbol = lineSymbol;
+            queryMedianAge(event.graphics[0].geometry, analysisSlider.values[0]);
+          }
+        });     
+        
+        analysisSlider.on(["thumb-drag"], (e) => {
+          if (e.state === "drag" || e.state === "stop") {
+            queryMedianAge(this.geometry, analysisSlider.values[0]);
+          }
+        });        
       })
 
-      sketch.on(["create"], (event) => {
-        console.log(event);
-        if (event.state === "complete") {
-          this.geometry = event.graphic.geometry;
-          queryMedianAge(event.graphic.geometry, analysisSlider.values[0]);
-        }
-      });
-      sketch.on(["update"], (event) => {
-        console.log(event);
-        if (event.state === "complete") {
-          this.geometry = event.graphics[0].geometry;
-          queryMedianAge(event.graphics[0].geometry, analysisSlider.values[0]);
-        }
-      });       
-
-      function queryMedianAge(geometry, sliderThumbValue) {
-        
+      function queryMedianAge(geometry, sliderThumbValue) {        
         view.whenLayerView(featureLayer).then( (layerView) => {
 
           const filter = {
@@ -197,7 +255,7 @@
               document.getElementById("div-median-age-text").innerText = (total / results.features.length).toFixed(0);
 
               const totalDiversity = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
-              document.getElementById("div-diversity-index-text").innerText = (totalDiversity / results.features.length).toFixed(0) + "%";              
+              document.getElementById("div-medianage-text").innerText = (totalDiversity / results.features.length).toFixed(0) + "%";              
             })
             .catch((error) => {
               console.error("Query failed: ", error);
@@ -231,14 +289,14 @@
     <div id="div-median-age-text" class="totalText">0</div>
   </div>
 
-  <div id="div-diversity-index" class="esri-widget">
+  <div id="div-medianage" class="esri-widget">
     <div class="titleText">Unemployment Rate</div>
-    <div id="div-diversity-index-text" class="totalText">0</div>
+    <div id="div-medianage-text" class="totalText">0</div>
   </div>
 
   <div id="viewDiv"></div>
 
-  <div id="div-slider" class="esri-widget"></div>
+  <div id="div-slider" class="esri-widget"><span id="span-slider-text">Miles</span></div>
 </body>
 
 </html>
