@@ -7,7 +7,7 @@
   <title>Sketch + Demographics</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css" />
   <link rel="stylesheet" href="css/sketch.css" />
-  
+
   <script src="https://js.arcgis.com/4.14/"></script>
 
   <script>
@@ -144,8 +144,8 @@
 
               bufferGraphicHandler(results.queryGeometry, sliderThumbValue);                      
 
-              const total = results.features.reduce((accumulator, currentValue) => accumulator + currentValue.attributes.MEDAGE_CY, 0);
-              document.getElementById("div-median-age-text").innerText = (total / results.features.length).toFixed(0);
+              const totalMedianAge = results.features.reduce((accumulator, currentValue) => accumulator + currentValue.attributes.MEDAGE_CY, 0);
+              document.getElementById("div-median-age-text").innerText = (totalMedianAge / results.features.length).toFixed(0);
 
               const totalDiversity = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
               document.getElementById("div-medianage-text").innerText = (totalDiversity / results.features.length).toFixed(0) + "%";              
