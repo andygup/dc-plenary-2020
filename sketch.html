@@ -92,20 +92,14 @@
         view.ui.add(medianAgeIndexDiv, "top-left");   
         
         sketch.on(["create"], (event) => {
-          console.log(event);
-          if (event.state === "complete") {
             this.geometry = event.graphic.geometry;
             queryMedianAge(event.graphic.geometry, analysisSlider.values[0]);
-          }
         });
 
         sketch.on(["update"], (event) => {
-          console.log(event);
-          if (event.state === "complete") {
             this.geometry = event.graphics[0].geometry;
             event.graphics[0].symbol = lineSymbol;
             queryMedianAge(event.graphics[0].geometry, analysisSlider.values[0]);
-          }
         });     
         
         analysisSlider.on(["thumb-drag"], (e) => {
