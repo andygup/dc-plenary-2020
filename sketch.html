@@ -19,8 +19,9 @@
       "esri/layers/GraphicsLayer",
       "esri/tasks/support/Query",
       "esri/widgets/Slider",
+      "esri/core/promiseUtils",
       "esri/layers/FeatureLayer"], 
-    (WebMap, MapView, Sketch, Graphic, GraphicsLayer, Query, Slider, FeatureLayer) => {
+    (WebMap, MapView, Sketch, Graphic, GraphicsLayer, Query, Slider, promiseUtils, FeatureLayer) => {
 
       let featureLayerView;
       let geometry;
@@ -146,36 +147,38 @@
             returnQueryGeometry: true         
           }
 
-          layerView.queryFeatures(query)
-            .then((results) => {    
-
-              bufferGraphicHandler(results.queryGeometry, sliderThumbValue);                      
-
-              const totalMedianAge = results.features.reduce((accumulator, currentValue) => accumulator + currentValue.attributes.MEDAGE_CY, 0);
-              document.getElementById("div-median-age-text").innerText = (totalMedianAge / results.features.length).toFixed(0);
-
-              const totalUnemployment = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
-              document.getElementById("div-unemployment-text").innerText = (totalUnemployment / results.features.length).toFixed(0) + "%";              
-            })
-            .catch((error) => {
-              console.error("Query failed: ", error);
-            });        
-
+          runLocalQuery(query, layerView, sliderThumbValue);
         });
       }
 
-      function bufferGraphicHandler(geometry, sliderThumbValue){
+      const runLocalQuery = promiseUtils.debounce((query, layerView, sliderThumbValue) => {
+        return  layerView.queryFeatures(query)
+          .then((results) => {
+            bufferGraphicHandler(results.queryGeometry, sliderThumbValue);
+            
+            const totalMedianAge = results.features.reduce((accumulator, currentValue) => accumulator + currentValue.attributes.MEDAGE_CY, 0);
+            document.getElementById("div-median-age-text").innerText = (totalMedianAge / results.features.length).toFixed(0);
 
-        if (tempGraphic) {
-          graphicsLayerBuffer.remove(tempGraphic);
-        }
+            const totalUnemployment = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
+            document.getElementById("div-unemployment-text").innerText = (totalUnemployment / results.features.length).toFixed(0) + "%";
+          })
+          .catch((error) => {
+            console.error("Query failed: ", error);
+          });   
+        });
 
-        tempGraphic = new Graphic({
-          geometry: geometry,
-          symbol: bufferSymbol
-        })
+      function bufferGraphicHandler(geometry, sliderThumbValue) {
 
-        graphicsLayerBuffer.add(tempGraphic);
+          if (tempGraphic) {
+            graphicsLayerBuffer.remove(tempGraphic);
+          }
+  
+          tempGraphic = new Graphic({
+            geometry: geometry,
+            symbol: bufferSymbol
+          })
+
+          graphicsLayerBuffer.add(tempGraphic);
       }
 
     });
