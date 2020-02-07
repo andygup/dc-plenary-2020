@@ -46,7 +46,8 @@
       const unemploymentDiv = document.getElementById("div-unemployment");
       const sliderDiv = document.getElementById("div-slider");
 
-      let graphicsLayer = new GraphicsLayer();          
+      let graphicsLayer = new GraphicsLayer();     
+      let graphicsLayerBuffer = new GraphicsLayer();     
 
       let featureLayer = new FeatureLayer({
         url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/Home_Value_and_Income/FeatureServer/5",
@@ -59,7 +60,7 @@
         }
       });
 
-      webmap.addMany([featureLayer, graphicsLayer]);
+      webmap.addMany([featureLayer, graphicsLayerBuffer, graphicsLayer]);
 
       let view = new MapView({
         container: "viewDiv",
@@ -70,7 +71,11 @@
 
       const sketch = new Sketch({
         layer: graphicsLayer,
-        view: view
+        view: view,
+        // creationMode: "single",
+        defaultUpdateOptions: {
+          tool: "reshape"
+        }
       });
 
       sketch.viewModel.polylineSymbol = lineSymbol;      
@@ -162,7 +167,7 @@
       function bufferGraphicHandler(geometry, sliderThumbValue){
 
         if (tempGraphic) {
-          graphicsLayer.remove(tempGraphic);
+          graphicsLayerBuffer.remove(tempGraphic);
         }
 
         tempGraphic = new Graphic({
@@ -170,7 +175,7 @@
           symbol: bufferSymbol
         })
 
-        graphicsLayer.add(tempGraphic);
+        graphicsLayerBuffer.add(tempGraphic);
       }
 
     });
