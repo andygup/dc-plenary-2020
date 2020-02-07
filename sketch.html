@@ -30,7 +30,7 @@
       const lineSymbol = {
         type: "simple-line", // autocasts as new SimpleLineSymbol()
         color: "red", // RGB color values as an array
-        width: 5
+        width: 8
       };       
       
       const bufferSymbol = {
@@ -43,7 +43,7 @@
       }
 
       const medianAgeDiv = document.getElementById("div-median-age");
-      const medianAgeIndexDiv = document.getElementById("div-medianage");
+      const unemploymentDiv = document.getElementById("div-unemployment");
       const sliderDiv = document.getElementById("div-slider");
 
       let graphicsLayer = new GraphicsLayer();          
@@ -89,7 +89,7 @@
         view.ui.add(sketch, "top-right");
         view.ui.add(analysisSlider, "top-right");
         view.ui.add(medianAgeDiv, "top-left");
-        view.ui.add(medianAgeIndexDiv, "top-left");   
+        view.ui.add(unemploymentDiv, "top-left");   
         
         sketch.on(["create"], (event) => {
             this.geometry = event.graphic.geometry;
@@ -100,7 +100,15 @@
             this.geometry = event.graphics[0].geometry;
             event.graphics[0].symbol = lineSymbol;
             queryMedianAge(event.graphics[0].geometry, analysisSlider.values[0]);
-        });     
+        });   
+        
+        // sketch.on(["delete"], () => {
+        //   graphicsLayer.removeAll();
+        //   layerView.effect = {};
+        //   if (tempGraphic) {
+        //     graphicsLayer.remove(tempGraphic); // bug?
+        //   }          
+        // });
         
         analysisSlider.on(["thumb-drag"], (e) => {
           if (e.state === "drag" || e.state === "stop") {
@@ -141,8 +149,8 @@
               const totalMedianAge = results.features.reduce((accumulator, currentValue) => accumulator + currentValue.attributes.MEDAGE_CY, 0);
               document.getElementById("div-median-age-text").innerText = (totalMedianAge / results.features.length).toFixed(0);
 
-              const totalDiversity = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
-              document.getElementById("div-medianage-text").innerText = (totalDiversity / results.features.length).toFixed(0) + "%";              
+              const totalUnemployment = results.features.reduce((accumulator, currentValue) => accumulator + Math.ceil(currentValue.attributes.UNEMPRT_CY), 0);
+              document.getElementById("div-unemployment-text").innerText = (totalUnemployment / results.features.length).toFixed(0) + "%";              
             })
             .catch((error) => {
               console.error("Query failed: ", error);
@@ -176,9 +184,9 @@
     <div id="div-median-age-text" class="totalText">0</div>
   </div>
 
-  <div id="div-medianage" class="esri-widget">
+  <div id="div-unemployment" class="esri-widget">
     <div class="titleText">Unemployment Rate</div>
-    <div id="div-medianage-text" class="totalText">0</div>
+    <div id="div-unemployment-text" class="totalText">0</div>
   </div>
 
   <div id="viewDiv"></div>
